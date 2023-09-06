@@ -7,19 +7,19 @@ To run the file watcher use the script start.ps1 by running `./start.ps1`, this 
 
 # Contents
 
-## File Watcher
+## `file_watcher.py`
 
 Contains main function that creates a watchdog event and listener that will listen for updates on a specified folder (folder that contains FW metadata files). 
 Once a file has been added it will be stored to a local SQLite table and uploaded to an AWS S3 bucket if no duplicate entry exists in our local db
 
-## Connection
+## `connection.py`
 
 Contains class that handles our connection to our SQLite db. Handles engine creation, connection instantialization and CRUD operations
 
-## Models
+## `models.py`
 
 Contains all model classes defined using SQLAlchemy's ORM tools. 
 
-## S3
+## `S3.py`
 
 Contains wrapper class that handles connection, authentication, and reading and writing data to our AWS S3 bucket
