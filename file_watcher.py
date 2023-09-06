@@ -52,7 +52,7 @@ class CustomHandler(LoggingEventHandler):
                 values = {"filename":filename, "content": data, 
                     "created":datetime.now(),"updated":datetime.now()
                 }
-                self.connection.insert_value(data)
+                self.connection.insert_value(values)
                 encoded_data = json.dumps(values, default=str)
                 self.S3_conn.write_data(encoded_data,filename)
         else:
@@ -75,10 +75,10 @@ def main(directory: str) -> None:
     ACCESS_KEY= os.getenv('METADATA_ACCESS_KEY')
     SECRET_KEY= os.getenv('METADATA_SECRET_KEY')
     BUCKET_NAME = os.getenv('METADATA_BUCKET_NAME')
-    SESSION_TOKEN = os.getenv('AWS_SESSION_TOKEN')
+
 
     metadata_path = os.path.join(os.path.dirname(__file__),directory)
-    S3_obj = S3Pipeline(ACCESS_KEY,SECRET_KEY, BUCKET_NAME, SESSION_TOKEN)
+    S3_obj = S3Pipeline(ACCESS_KEY,SECRET_KEY, BUCKET_NAME)
 
     sqlite_uri = f"sqlite:///{os.getcwd()}/metadata.db"
 

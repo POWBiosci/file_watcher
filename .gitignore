@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # TXT files
-*.txt
+#*.txt
 
 #SQLITE Files
 *.db

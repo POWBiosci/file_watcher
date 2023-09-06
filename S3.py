@@ -20,7 +20,7 @@ class S3Pipeline:
     all_data = Pipeline.get_data()
     specific_query = Pipeline.get_value('F2', 'TEMP)
     """
-    def __init__(self, access_key: str, secret_key: str, bucket_name: str, session_token: str="") -> None:
+    def __init__(self, access_key: str, secret_key: str, bucket_name: str) -> None:
         """
         Initialize API object. 
 
@@ -45,7 +45,6 @@ class S3Pipeline:
             self.session = boto3.Session(
                 aws_access_key_id=self.AWS_ACCESS_KEY,
                 aws_secret_access_key=self.AWS_SECRET_KEY,
-                aws_session_token=session_token
             )
         except NoCredentialsError:
             print("Invalid Credentials Provided")
