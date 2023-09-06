@@ -4,68 +4,11 @@ import logging
 import typing as ty
 from datetime import datetime
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, insert
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from sqlalchemy.exc import IntegrityError
 from watchdog.events import LoggingEventHandler
 from watchdog.observers import Observer
 from S3 import S3Pipeline
-from sqlalchemy import String, JSON, TIMESTAMP, func
-from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column 
-
-class Base(DeclarativeBase):
-    pass
-
-class MetaData(Base):
-    """
-    Represents a table of uploaded metadata files
-
-    Attributes:
-        `filename` (str): Name of file
-        `created` (datetime): Timestamp indicating when the entry was created.
-        `updated` (datetime): Timestamp indicating the last time the entry was updated.
-    """
-
-    __tablename__ = "metadata_table"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    filename: Mapped[str] = mapped_column(String)
-    content: Mapped[ty.Dict[str,ty.Any]] = mapped_column(JSON)
-    created: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True),default=func.now())
-    updated: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True),onupdate=func.now())
-
-
-class Connection:
-    def __init__(self, uri: str, table: DeclarativeBase):
-        try:
-            self.engine = create_engine(uri)
-            self.table = table
-            self.Session = sessionmaker(bind=self.engine)
-            Base.metadata.create_all(self.engine)
-
-            print(f"Connection Established to {uri}")
-
-        except:
-            raise ConnectionError("Invalid URI String")
-    
-    def insert_value(self, values: ty.Dict[str,ty.Any]) -> None:
-            session = self.Session()
-            print("inserting values... ")
-            try:
-                session.execute(
-                        insert(self.table),
-                        values
-                )
-                session.commit()
-            except IntegrityError:
-                    print(f"Entry {values} Already added")
-                    session.rollback()
-    
-    def entry_exists(self, filename: str) -> bool:
-        session = self.Session()
-        exists = session.query(self.table).filter_by(filename=filename).first()
-
-        return True if exists else False 
+from models import MetaData
+from connection import Connection
 
 
 def parse_metadata(filename: str) -> ty.Union[int,ty.Dict[str,ty.Any]]:
