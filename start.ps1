@@ -27,7 +27,7 @@ Function Setup-VirtualEnv {
     }
     
     Write-Log "Activating virtual environment..."
-    . $venvPath/bin/Activate
+    . $venvPath/bin/Activate.ps1
 }
 
 # Function to install Python dependencies
