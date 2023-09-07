@@ -76,18 +76,18 @@ def main(directory: str) -> None:
     SECRET_KEY= os.getenv('METADATA_SECRET_KEY')
     BUCKET_NAME = os.getenv('METADATA_BUCKET_NAME')
 
-
+    #path used for testing local directory
     metadata_path = os.path.join(os.path.dirname(__file__),directory)
+
     S3_obj = S3Pipeline(ACCESS_KEY,SECRET_KEY, BUCKET_NAME)
 
     sqlite_uri = f"sqlite:///{os.getcwd()}/metadata.db"
 
-    if os.path.exists(metadata_path):
+    if os.path.exists(directory):
         connection = Connection(sqlite_uri,MetaData)
-        path = metadata_path
-        event_handler = CustomHandler(path, connection, S3_obj)
+        event_handler = CustomHandler(directory, connection, S3_obj)
         observer = Observer()
-        observer.schedule(event_handler, path, recursive=True)
+        observer.schedule(event_handler, directory, recursive=True)
         observer.start()
         try:
             while observer.is_alive():
@@ -96,11 +96,11 @@ def main(directory: str) -> None:
             observer.stop()
             observer.join()
     else:
-        print(f"Incorrect Metadata Path {metadata_path} Specified")
+        print(f"Incorrect Metadata Path {directory} Specified")
 
 if __name__ == "__main__":
     #replace this with actual path as shown below
-    path = os.path.join("C:", "FW", "WiWo", "metdata")
+    path = os.path.join("C:", "FW", "WiWo", "metadata")
     main("metadata")
 
 
