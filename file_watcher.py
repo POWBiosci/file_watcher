@@ -82,6 +82,7 @@ def main(directory: str) -> None:
     S3_obj = S3Pipeline(ACCESS_KEY,SECRET_KEY, BUCKET_NAME)
 
     sqlite_uri = f"sqlite:///{os.getcwd()}/metadata.db"
+    sqlite_uri = os.getenv('AWS_URI')
 
     if os.path.exists(directory):
         connection = Connection(sqlite_uri,MetaData)
@@ -100,8 +101,8 @@ def main(directory: str) -> None:
 
 if __name__ == "__main__":
     #replace this with actual path as shown below
-    path = os.path.join("C:", "FW", "WiWo", "metadata")
-    main("metadata")
+    path = os.path.join("C:", os.sep, "FW", "WiWo", "metadata")
+    main(path)
 
 
 
